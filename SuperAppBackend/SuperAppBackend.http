@@ -1,0 +1,6 @@
+@SuperAppBackend_HostAddress = http://localhost:5118
+
+GET {{SuperAppBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
