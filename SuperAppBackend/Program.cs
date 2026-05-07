@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using SuperAppBackend;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Register the CORS service and define the "AllowAll" policy
+// 1. Register the CORS service
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -9,13 +12,15 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 
+// 2. Register the In-Memory Database
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("SuperAppDb"));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -24,8 +29,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 2. Apply the CORS policy
-// This MUST be placed after HttpsRedirection and BEFORE Authorization/MapControllers
+// 3. Apply the CORS policy
 app.UseCors("AllowAll");
 
 app.UseAuthorization();
